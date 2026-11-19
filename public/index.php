@@ -56,6 +56,9 @@ $routes($app);
 // Routes Album (repository)
 (require __DIR__ . '/../src/routes/routesAlbum.php')($app);
 
+// Routes Rating (repository)
+(require __DIR__ . '/../src/routes/routesRating.php')($app);
+
 /** @var SettingsInterface $settings */
 $settings = $container->get(SettingsInterface::class);
 
@@ -72,20 +75,4 @@ $responseFactory = $app->getResponseFactory();
 $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
 
 // Create Shutdown Handler
-$shutdownHandler = new ShutdownHandler($request, $errorHandler, $displayErrorDetails);
-register_shutdown_function($shutdownHandler);
-
-// Add Routing Middleware
-$app->addRoutingMiddleware();
-
-// Add Body Parsing Middleware
-$app->addBodyParsingMiddleware();
-
-// Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
-$errorMiddleware->setDefaultErrorHandler($errorHandler);
-
-// Run App & Emit Response
-$response = $app->handle($request);
-$responseEmitter = new ResponseEmitter();
-$responseEmitter->emit($response);
+$shutdownHandler = new ShutdownHandler($request, $errorHandler,$displayErrorDetails);
